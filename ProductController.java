@@ -11,4 +11,10 @@ public class ProductController {
         // Dummy-Implementierung, ersetze dies durch deine Logik
         return "List of Products";
     }
+
+    @GetMapping("/test")
+public String testEndpoint() {
+    return "Test endpoint response";
+}
+
 }
