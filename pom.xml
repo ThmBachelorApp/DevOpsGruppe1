@@ -18,6 +18,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- Füge bei Bedarf weitere Abhängigkeiten hier hinzu -->
     </dependencies>
 
     <build>
@@ -25,6 +26,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.4.5</version>
+                <configuration>
+                    <mainClass>com.smartshop.SmartshopApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
