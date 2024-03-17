@@ -8,7 +8,7 @@ WORKDIR /app
 COPY pom.xml .
 
 # Kopiere den Quellcode
-COPY main/src main/src
+COPY src src
 
 # Baue die Anwendung mit Maven
 RUN mvn -B clean package -DskipTests
