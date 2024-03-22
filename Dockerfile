@@ -1,6 +1,9 @@
 # Starte von der offiziellen Base Image von Java 11
 FROM openjdk:11-jdk-slim as build
 
+# Maven und andere benötigte Tools installieren
+RUN apt-get update && apt-get install -y maven
+
 # Arbeitsverzeichnis im Container setzen
 WORKDIR /app
 
