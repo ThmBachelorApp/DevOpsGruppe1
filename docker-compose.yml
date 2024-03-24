@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  smartshop-container:
+    image: smartshopdevops/smartshop:latest
+    container_name: f59749ad8595
+    ports:
+      - "8081:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
