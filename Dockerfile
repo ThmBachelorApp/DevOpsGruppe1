@@ -1,32 +1,36 @@
-# Start with a base image containing Java runtime
-FROM openjdk:11-jdk-slim as build
+# Verwenden Sie das offizielle Jenkins-Image als Basis
+FROM jenkins/jenkins:lts as jenkins-base
 
-# Install maven
-RUN apt-get update && apt-get install -y maven
+# Wechseln Sie zum Root-Benutzer, um Installationen durchzuführen
+USER root
 
-# Set the working directory in Docker
+# Installieren Sie Maven und Git
+RUN apt-get update && \
+    apt-get install -y maven git
+
+# Setzen Sie das Arbeitsverzeichnis
 WORKDIR /app
 
-# Copy maven executable to the image
+# Kopieren Sie die Maven-Dateien
 COPY pom.xml .
+COPY src ./src
 
-# Copy the source code
-COPY src src
-
-# Package the application
+# Bauen Sie die Anwendung
 RUN mvn clean package -DskipTests
 
-# Start with a clean image
+# Fügen Sie weitere Schritte hinzu, die Sie benötigen, bevor Sie zu einem schlankeren Image wechseln
+
+# Start with a clean image for the runtime
 FROM openjdk:11-jre-slim
 
-# Set the working directory in Docker
+# Setzen Sie das Arbeitsverzeichnis
 WORKDIR /app
 
-# Copy the built artifact from the build stage
-COPY --from=build /app/target/*.jar /app/app.jar
+# Kopieren Sie das gebaute Artefakt vom Jenkins-Build-Image
+COPY --from=jenkins-base /app/target/*.jar /app/app.jar
 
-# Expose port 8080
+# Legen Sie den Port fest, den Ihre Anwendung benutzen wird
 EXPOSE 8080
 
-# Run the jar file 
+# Definieren Sie den Entry Point für die Anwendung
 ENTRYPOINT ["java","-jar","app.jar"]
