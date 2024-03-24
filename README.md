@@ -1,2 +1,0 @@
-# DevOpsGruppe1
-Versionskontrolle

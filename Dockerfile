@@ -1,32 +1,32 @@
-# Starte von der offiziellen Base Image von Java 11
+# Start with a base image containing Java runtime
 FROM openjdk:11-jdk-slim as build
 
-# Maven und andere benötigte Tools installieren
+# Install maven
 RUN apt-get update && apt-get install -y maven
 
-# Arbeitsverzeichnis im Container setzen
+# Set the working directory in Docker
 WORKDIR /app
 
-# Kopiere die Maven Definition in das Arbeitsverzeichnis
+# Copy maven executable to the image
 COPY pom.xml .
 
-# Kopiere den Quellcode
+# Copy the source code
 COPY src src
 
-# Baue die Anwendung mit Maven
-RUN mvn -B clean package -DskipTests
+# Package the application
+RUN mvn clean package -DskipTests
 
-# Starte von einem neuen, sauberen Image
+# Start with a clean image
 FROM openjdk:11-jre-slim
 
-# Arbeitsverzeichnis im Container setzen
+# Set the working directory in Docker
 WORKDIR /app
 
-# Kopiere das gebaute Artefakt aus dem Build-Image
-COPY --from=build /app/target/smartshop-1.0-SNAPSHOT.jar /app/smartshop.jar
+# Copy the built artifact from the build stage
+COPY --from=build /app/target/*.jar /app/app.jar
 
-# Der Port, auf dem die Anwendung läuft (anpassen falls nötig)
+# Expose port 8080
 EXPOSE 8080
 
-# Starte die Spring Boot-Anwendung
-CMD ["java", "-jar", "smartshop.jar"]
+# Run the jar file 
+ENTRYPOINT ["java","-jar","app.jar"]
