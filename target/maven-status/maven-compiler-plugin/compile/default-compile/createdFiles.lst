@@ -1,3 +1,4 @@
+com\smartshop\Controller\HelloWorldController.class
+com\smartshop\SmartshopApplication.class
 HelloWorld.class
 com\example\onlineshop\ProductController.class
-com\smartshop\SmartApplication.class
