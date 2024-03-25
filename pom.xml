@@ -2,7 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.smartshop</groupId> <!-- Angepasst an den Paketnamen -->
+    <groupId>com.smartshop</groupId>
     <artifactId>smartshop</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -14,11 +14,10 @@
     </parent>
 
     <dependencies>
-        <dependency>
+         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- Füge bei Bedarf weitere Abhängigkeiten hier hinzu -->
     </dependencies>
 
     <build>
@@ -31,11 +30,19 @@
                     <mainClass>com.smartshop.SmartshopApplication</mainClass>
                 </configuration>
             </plugin>
-             <plugin>
-             <groupId>org.sonarsource.scanner.maven</groupId>
-             <artifactId>sonar-maven-plugin</artifactId>
-             <version>3.7.0.1746</version>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.7.0.1746</version>
             </plugin>
+            <!-- Weitere Plugins hier -->
         </plugins>
     </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven2</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
