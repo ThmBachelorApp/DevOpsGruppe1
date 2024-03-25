@@ -20,6 +20,7 @@
         </dependency>
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
@@ -30,19 +31,6 @@
                     <mainClass>com.smartshop.SmartshopApplication</mainClass>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.7.0.1746</version>
-            </plugin>
-            <!-- Weitere Plugins hier -->
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven2</id>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
