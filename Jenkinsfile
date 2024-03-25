@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // Nutzt Maven zum Bauen des Projekts
-                   sh 'mvn clean package'
+                  'mvn clean package'
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
         withSonarQubeEnv('DevOpsSQ') {
             script {
                 // Verwendet die von Jenkins gesetzten Umgebungsvariablen
-               sh 'mvn sonar:sonar'
+               'mvn sonar:sonar'
             }
         }
     }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     // Nutzt Maven zum Ausführen der Tests
-                   sh 'mvn test'
+                  'mvn test'
                 }
             }
         }
