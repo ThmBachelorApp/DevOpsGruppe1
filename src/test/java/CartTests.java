@@ -1,10 +1,8 @@
-import com.smartshop.model.Product;
-import com.smartshop.service.Cart; // Stellen Sie sicher, dass Sie Cart importieren
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CartTests { // 'public' wurde entfernt; in JUnit 5 optional
+public class CartTests {
     private Cart cart;
 
     @BeforeEach
@@ -13,14 +11,33 @@ class CartTests { // 'public' wurde entfernt; in JUnit 5 optional
     }
 
     @Test
-    void testAddProductAndTotalPrice() {
-        Product product1 = new Product("1", "Java Book", 29.99);
-        Product product2 = new Product("2", "Spring Book", 39.99);
+    void testAddProduct() {
+        cart.addProduct(new Product("1", "Java Book", 29.99));
+        assertEquals(1, cart.getProductCount(), "Nach dem Hinzufügen eines Produkts sollte der Warenkorb 1 Produkt enthalten.");
+    }
 
-        cart.addProduct(product1);
-        cart.addProduct(product2);
+    @Test
+    void testGetTotalPriceWithSingleProduct() {
+        cart.addProduct(new Product("1", "Java Book", 29.99));
+        assertEquals(29.99, cart.getTotalPrice(), 0.01, "Die Gesamtsumme sollte 29.99 betragen, nachdem ein Produkt hinzugefügt wurde.");
+    }
 
-        assertEquals(2, cart.getProductCount(), "Der Warenkorb sollte 2 Produkte enthalten.");
-        assertEquals(69.98, cart.getTotalPrice(), 0.01, "Die Gesamtsumme sollte 69.98 betragen.");
+    @Test
+    void testGetTotalPriceWithMultipleProducts() {
+        cart.addProduct(new Product("1", "Java Book", 29.99));
+        cart.addProduct(new Product("2", "Spring Book", 39.99));
+        assertEquals(69.98, cart.getTotalPrice(), 0.01, "Die Gesamtsumme sollte 69.98 betragen, nachdem zwei Produkte hinzugefügt wurden.");
+    }
+
+    @Test
+    void testGetProductCountWithNoProduct() {
+        assertEquals(0, cart.getProductCount(), "Der Warenkorb sollte keine Produkte enthalten, wenn noch keine hinzugefügt wurden.");
+    }
+
+    @Test
+    void testGetProductCountWithMultipleProducts() {
+        cart.addProduct(new Product("1", "Java Book", 29.99));
+        cart.addProduct(new Product("2", "Spring Book", 39.99));
+        assertEquals(2, cart.getProductCount(), "Der Warenkorb sollte 2 Produkte enthalten, nachdem zwei Produkte hinzugefügt wurden.");
     }
 }
