@@ -6,12 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'DevOpsTool/smartshop:latest'
-        DOCKERHUB_CREDENTIALS = credentials('DockerHub')
-        // SonarQube Server URL
-        SONARQUBE_SERVER = 'http://localhost:9000'
-        // Der Name des SonarQube-Scanners, der in Jenkins konfiguriert ist
-        SONARQUBE_SCANNER = 'DevOpsSQ'
+        DOCKER_IMAGE = 'smartshopdevops/smartshop:latest'
     }
 
     stages {
@@ -29,46 +24,57 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and Test') {
             steps {
                 script {
-                    // Nutzt Maven zum Bauen des Projekts
-                  'mvn clean package'
+                    // Führt Maven aus, um das Projekt zu bauen und die Tests auszuführen, inklusive der Erstellung des JaCoCo-Berichts
+                    bat 'mvn clean verify'
                 }
             }
         }
         
-     stage('Scan') {
-    steps {
-        withSonarQubeEnv('DevOpsSQ') {
-            script {
-                // Verwendet die von Jenkins gesetzten Umgebungsvariablen
-               'mvn sonar:sonar'
-            }
-        }
-    }
-}
-
-
-    
-        stage('Test') {
+        stage('Publish JUnit Test Results') {
             steps {
-                script {
-                    // Nutzt Maven zum Ausführen der Tests
-                  'mvn test'
-                }
+                // Veröffentlicht die JUnit-Testergebnisse in Jenkins
+                junit '**/target/surefire-reports/*.xml'
             }
         }
-
+        
+        stage('SonarQube Scan') {
+            steps {
+                withCredentials([string(credentialsId: 'SonarLogin', variable: 'SONAR_TOKEN')]) {
+                    // Führt die SonarQube-Analyse aus, einschließlich des Uploads des JaCoCo-Testabdeckungsberichts
+                    bat "mvn sonar:sonar -Dsonar.projectKey=SmartShopSonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+                    }
+                 
+                }
+        }
+        
+       
+     stage('Quality Gate Check') {
+    steps {
+        timeout(time: 1, unit: 'HOURS') {
+            script {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                     error('Pipeline aborted due to quality gate failure.')
+                }
+             }
+          }
+       }
+     }
+        
         stage('Docker Build and Push') {
             steps {
                 script {
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Login bei der Docker-Registry
-                        'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                        bat "docker login --username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD}"
                         // Bauen und taggen des Docker-Images
-                         "docker build -t ${env.DOCKER_IMAGE} -f Dockerfile ."
+                        bat "docker build -t ${env.DOCKER_IMAGE} -f Dockerfile ."
                         // Pushen des Docker-Images zur Registry
-                         "docker push ${env.DOCKER_IMAGE}"
+                        bat "docker push ${env.DOCKER_IMAGE}"
+                    }
                 }
             }
         }
@@ -76,12 +82,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    // Stoppt den laufenden Container (falls vorhanden)
-                     "docker stop blissful_hawking || true"
-                     "docker rm blissful_hawking || true"
-                    // Startet einen neuen Container aus dem gebauten Image
-                     "docker run -d --name blissful_hawking -p 8081:8080 ${env.DOCKER_IMAGE}"
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat "docker login --username=${DOCKER_USERNAME} --password=${DOCKER_PASSWORD}"
+                        // Stoppt den laufenden Container (falls vorhanden)
+                        bat "docker stop smartshop-container || exit 0"
+                        bat "docker rm smartshop-container || exit 0"
+                        // Startet einen neuen Container aus dem gebauten Image
+                        bat "docker run -d --name smartshop-container -p 8081:8080 ${env.DOCKER_IMAGE}"
+                    }
                 }
             }
         }
