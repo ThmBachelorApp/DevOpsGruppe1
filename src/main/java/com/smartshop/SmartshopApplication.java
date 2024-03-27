@@ -1,17 +1,21 @@
 package com.smartshop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SmartshopApplication {
 
+    private static final Logger logger = LoggerFactory.getLogger(SmartshopApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(SmartshopApplication.class, args);
     }
     
-    // Hinzugefügte Methode, die wahrscheinlich von SonarQube bemängelt wird
-    private static void unusedMethod() {
-        System.out.println("Diese Methode wird nirgends aufgerufen.");
+    // Beispiel einer Methode, die Logger verwendet
+    public void logMessage(String message) {
+        logger.info("Logging message: {}", message);
     }
 }
