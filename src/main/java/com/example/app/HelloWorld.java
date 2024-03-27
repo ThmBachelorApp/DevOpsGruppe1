@@ -1,9 +1,14 @@
-// Dateipfad: src/main/java/com/example/app/HelloWorld.java
+package com.example.app;
 
-package com.example.app; // Paketdeklaration hinzufügen
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HelloWorld {
+    // Erstellen eines Logger-Objekts für diese Klasse
+    private static final Logger logger = LoggerFactory.getLogger(HelloWorld.class);
+
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        // Verwendung des Loggers statt System.out.println
+        logger.info("Hello, World!");
     }
 }
