@@ -1,6 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.smartshop.service.Cart;
+import com.smartshop.model.Product;
+
 
 public class CartTests {
     private Cart cart;
