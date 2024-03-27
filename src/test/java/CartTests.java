@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 
 class CartTests {
-    public Cart cart;
+    private Cart cart;
     
     
     @BeforeEach
