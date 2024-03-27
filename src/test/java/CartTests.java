@@ -24,5 +24,4 @@ void testAddProductAndTotalPrice() {
     cart.addProduct(product2);
 
     assertEquals(69.98, cart.getTotalPrice(), 0.01, "Die Gesamtsumme sollte 69.98 betragen.");
-}
-
+}}
