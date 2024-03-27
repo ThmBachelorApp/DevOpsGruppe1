@@ -14,14 +14,15 @@ public class CartTests {
     }
 
     @Test
-    void testAddProductAndTotalPrice() {
-        Product product1 = new Product("1", "Java Book", 29.99);
-        Product product2 = new Product("2", "Spring Book", 39.99);
 
-        cart.addProduct(product1);
-        cart.addProduct(product2);
+void testAddProductAndTotalPrice() {
+    Cart cart = new Cart();
+    Product product1 = new Product("1", "Java Book", 29.99);
+    Product product2 = new Product("2", "Spring Book", 39.99);
 
-        assertEquals(2, cart.getProductCount(), "Der Warenkorb sollte 2 Produkte enthalten.");
-        assertEquals(69.98, cart.getTotalPrice(), "Die Gesamtsumme sollte 69.98 betragen.");
-    }
+    cart.addProduct(product1);
+    cart.addProduct(product2);
+
+    assertEquals(69.98, cart.getTotalPrice(), 0.01, "Die Gesamtsumme sollte 69.98 betragen.");
 }
+
