@@ -5,7 +5,7 @@ import com.smartshop.service.Cart;
 import com.smartshop.model.Product;
 
 
-public class CartTests {
+class CartTests {
     private Cart cart;
 
     @BeforeEach
