@@ -1,8 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertThrows; // Stellen Sie sicher, dass Sie dies hinzufügen
 import org.junit.jupiter.api.Test;
-import com.smartshop.service.Cart;
 import com.smartshop.model.Product;
+import com.smartshop.service.Cart;
 
 
 class CartTests {
@@ -46,7 +46,6 @@ class CartTests {
 
     
 }
-
 class ProductTests {
 
     @Test
@@ -54,7 +53,7 @@ class ProductTests {
         Product product = new Product("1", "Java Book", 29.99);
         assertEquals("1", product.getId());
         assertEquals("Java Book", product.getName());
-        assertEquals(29.99, product.getPrice());
+        assertEquals(29.99, product.getPrice(), 0.001); // Hinzufügen einer Toleranz für den Preisvergleich
     }
 
     @Test
@@ -66,25 +65,25 @@ class ProductTests {
 
         assertEquals("2", product.getId());
         assertEquals("Spring Book", product.getName());
-        assertEquals(39.99, product.getPrice());
+        assertEquals(39.99, product.getPrice(), 0.001); // Hinzufügen einer Toleranz für den Preisvergleich
     }
 
     @Test
     void testApplyDiscountWithinRange() {
         Product product = new Product("1", "Java Book", 50.00);
         product.applyDiscount(0.2); // 20% Rabatt
-        assertEquals(40.00, product.getPrice());
+        assertEquals(40.00, product.getPrice(), 0.001); // Hinzufügen einer Toleranz für den Preisvergleich
     }
 
     @Test
     void testApplyDiscountLowerBoundary() {
         Product product = new Product("1", "Java Book", 50.00);
-        assertThrows(IllegalArgumentException.class, () -> product.applyDiscount(-0.1));
+        assertThrows(IllegalArgumentException.class, () -> product.applyDiscount(-0.1)); // Überprüfen der Ausnahme
     }
 
     @Test
     void testApplyDiscountUpperBoundary() {
         Product product = new Product("1", "Java Book", 50.00);
-        assertThrows(IllegalArgumentException.class, () -> product.applyDiscount(1.1));
+        assertThrows(IllegalArgumentException.class, () -> product.applyDiscount(1.1)); // Überprüfen der Ausnahme
     }
 }
