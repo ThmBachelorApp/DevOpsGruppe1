@@ -9,11 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 
 class CartTests {
     public Cart cart;
-
+    
+    
     @BeforeEach
     void setUp() {
-    private cart = new Cart();
-    }
+    cart = new Cart();
+}
+
 
     @Test
     void testAddProduct() {
