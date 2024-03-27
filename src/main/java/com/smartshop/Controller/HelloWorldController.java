@@ -1,4 +1,4 @@
-package com.smartshop.Controller;
+package com.TesController;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
