@@ -3,6 +3,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows; // Stellen Sie sich
 import org.junit.jupiter.api.Test;
 import com.smartshop.model.Product;
 import com.smartshop.service.Cart;
+import org.junit.jupiter.api.BeforeEach;
+
 
 
 class CartTests {
