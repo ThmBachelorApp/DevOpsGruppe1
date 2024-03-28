@@ -40,29 +40,30 @@ pipeline {
             }
         }
         
-        stage('SonarQube Scan') {
-            steps {
-                withCredentials([string(credentialsId: 'SonarLogin', variable: 'SONAR_TOKEN')]) {
-                    // Führt die SonarQube-Analyse aus, einschließlich des Uploads des JaCoCo-Testabdeckungsberichts
-                    bat "mvn sonar:sonar -Dsonar.projectKey=SmartShopSonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONAR_TOKEN} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
-                    }
-                 
-                }
+      stage('SonarQube Scan') {
+    steps {
+        withCredentials([string(credentialsId: 'SonarLogin', variable: 'SONAR_TOKEN')]) {
+            // Definiert den Kontext für SonarQube mit den benötigten Umgebungsvariablen
+            withSonarQubeEnv('SQDevOps') {
+                // Führt die SonarQube-Analyse aus, einschließlich des Uploads des JaCoCo-Testabdeckungsberichts
+                bat "mvn sonar:sonar -Dsonar.projectKey=SmartShopSonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${SONAR_TOKEN} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+            }
         }
+    }
+}
+
         
        
-     stage('Quality Gate Check') {
-    steps {
-        timeout(time: 1, unit: 'HOURS') {
-            script {
-                def qg = waitForQualityGate()
-                if (qg.status != 'OK') {
-                     error('Pipeline aborted due to quality gate failure.')
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
                 }
-             }
-          }
-       }
-     }
+            }
+        }
+
         
         stage('Docker Build and Push') {
             steps {
