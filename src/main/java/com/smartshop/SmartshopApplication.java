@@ -19,8 +19,6 @@ public class SmartshopApplication {
         logger.info("Logging message: {}", message);
     }
 
-        private static void unusedMethod() {
-        System.out.println("Diese Methode wird nirgends aufgerufen.");
-    }
+    
 
 }
